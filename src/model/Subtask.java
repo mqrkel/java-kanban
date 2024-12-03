@@ -1,15 +1,26 @@
 package model;
 
-import service.TaskManager;
-
 
 public class Subtask extends Task {
-    public Subtask(String name) {
-        super(name);
+    protected int epicId;
+
+    public Subtask(String name, int epicId, String description, TaskStatus status) {
+        super(name, description, status);
+        this.epicId = epicId;
+    }
+
+    public int getEpicId() {
+        return epicId;
     }
 
     @Override
     public String toString() {
-        return "Subtask{name=" + getName() + ", status=" + getStatus() + "}";
+        return "\n" + "Subtask{" +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
+                ", id=" + getId() +
+                ", epicId=" + epicId + "}";
     }
+
 }
