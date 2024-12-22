@@ -8,6 +8,9 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(Integer id, String name, String description, TaskStatus status) {
+        super(id, name, description, status);
+    }
 
     @Override
     public String toString() {

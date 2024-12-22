@@ -13,27 +13,33 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
-        this.id = 0;
+        this.id = getId();
+    }
+
+    public Task(Integer id, String name, String description, TaskStatus status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
-        this.id = 0;
+        this.id = getId();
     }
 
 
     @Override
     public String toString() {
-        return  "\n"+"Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", id=" + id +
-                '}';
+        return "\n" + "Task{" +
+               "name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               ", status=" + status +
+               ", id=" + id +
+               '}';
     }
-
 
 
     public String getName() {
