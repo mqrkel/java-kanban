@@ -2,10 +2,7 @@ package service;
 
 import model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -22,32 +19,46 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getAllTasksInHistoryList() {
-        return new ArrayList<>(historyManager.getHistory());
+        return historyManager.getHistory();
     }
 
     @Override
     public Task getTaskById(Integer taskId) {
-        Task task = tasks.get(taskId);
-        Task taskForHistory = new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus());
-        historyManager.addToHistory(taskForHistory);
-        return task;
-
+        for (Integer currentId : tasks.keySet()) {
+            if (Objects.equals(currentId, taskId)) {
+                Task task = tasks.get(taskId);
+                Task taskForHistory = new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus());
+                historyManager.addToHistory(taskForHistory);
+                return task;
+            }
+        }
+        return null;
     }
 
     @Override
     public Epic getEpicById(Integer epicId) {
-        Epic epic = epics.get(epicId);
-        Epic taskForHistory = new Epic(epic.getId(), epic.getName(), epic.getDescription(), epic.getStatus());
-        historyManager.addToHistory(taskForHistory);
-        return epic;
+        for (Integer currentId : epics.keySet()) {
+            if (Objects.equals(currentId, epicId)) {
+                Epic epic = epics.get(epicId);
+                Epic taskForHistory = new Epic(epic.getId(), epic.getName(), epic.getDescription(), epic.getStatus());
+                historyManager.addToHistory(taskForHistory);
+                return epic;
+            }
+        }
+        return null;
     }
 
     @Override
     public Subtask getSubtaskById(Integer subtaskId) {
-        Subtask subtask = subtasks.get(subtaskId);
-        Subtask taskForHistory = new Subtask(subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(), subtask.getEpicId());
-        historyManager.addToHistory(taskForHistory);
-        return subtask;
+        for (Integer currentId : subtasks.keySet()) {
+            if (Objects.equals(currentId, subtaskId)) {
+                Subtask subtask = subtasks.get(subtaskId);
+                Subtask taskForHistory = new Subtask(subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(), subtask.getEpicId());
+                historyManager.addToHistory(taskForHistory);
+                return subtask;
+            }
+        }
+        return null;
     }
 
 
