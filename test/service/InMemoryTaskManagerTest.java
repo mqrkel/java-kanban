@@ -311,7 +311,6 @@ class InMemoryTaskManagerTest {
             taskManager.getSubtaskById((subtask.getId()));
         }
         taskManager.deleteSubtask(2);
-        System.out.println(taskManager.getAllTasksInHistoryList());
         Assertions.assertEquals(4, taskManager.getAllTasksInHistoryList().size(), "При удалении задачи, список в истории должен быть уменьшен на 1");
     }
 }
