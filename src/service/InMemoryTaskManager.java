@@ -3,7 +3,6 @@ package service;
 import model.*;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 
 public class InMemoryTaskManager implements TaskManager {
