@@ -1,7 +1,6 @@
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import model.TaskStatus;
 import service.TaskManager;
 
 import static service.Managers.getDefault;
@@ -10,10 +9,6 @@ import static service.Managers.getDefault;
 public class Main {
 
     public static void main(String[] args) {
-        test();
-    }
-
-    private static void test() {
         testSprint6();
     }
 
@@ -28,19 +23,18 @@ public class Main {
         Subtask subtask1 = inMemoryTaskManager.createSubtask(new Subtask("Документы", "Проверить документы", epic1.getId()));
         Subtask subtask2 = inMemoryTaskManager.createSubtask(new Subtask("Вещи", "Собрать вещи", epic1.getId()));
         Subtask subtask3 = inMemoryTaskManager.createSubtask(new Subtask("Кот", "Отдать кота", epic1.getId()));
-
+        inMemoryTaskManager.getTaskById(task2.getId());
+        inMemoryTaskManager.getEpicById(epic2.getId());
         inMemoryTaskManager.getTaskById(task1.getId());
         System.out.println(inMemoryTaskManager.getAllTasksInHistoryList() + System.lineSeparator());
         inMemoryTaskManager.getTaskById(task1.getId());
         System.out.println(inMemoryTaskManager.getAllTasksInHistoryList() + System.lineSeparator());
-
         inMemoryTaskManager.getEpicById(epic1.getId());
         inMemoryTaskManager.getSubtaskById(subtask1.getId());
         inMemoryTaskManager.getSubtaskById(subtask2.getId());
         inMemoryTaskManager.getSubtaskById(subtask3.getId());
-        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList()+System.lineSeparator());
-
+        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList() + System.lineSeparator());
         inMemoryTaskManager.deleteEpic(epic1.getId());
-        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList()+System.lineSeparator());
+        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList() + System.lineSeparator());
     }
 }
