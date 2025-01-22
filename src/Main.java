@@ -12,40 +12,35 @@ public class Main {
     public static void main(String[] args) {
         test();
     }
+
     private static void test() {
+        testSprint6();
+    }
+
+    private static void testSprint6() {
         TaskManager inMemoryTaskManager = getDefault();
-        Task task = new Task("Кот", "Покорми кота", TaskStatus.NEW);
-        Task task2 = new Task("Магазин", "Сходи в магазин", TaskStatus.NEW);
+        Task task1 = inMemoryTaskManager.createTask(new Task("Кот", "Покорми кота"));
+        Task task2 = inMemoryTaskManager.createTask(new Task("Магазин", "Сходи в магазин"));
 
-        Epic epic = new Epic("Путешествие", "Приготовиться к путешествию");
-        Epic epic2 = new Epic("Новый год", "Подготовься к новому году");
+        Epic epic1 = inMemoryTaskManager.createEpic(new Epic("Путешествие", "Приготовиться к путешествию"));
+        Epic epic2 = inMemoryTaskManager.createEpic(new Epic("Новый год", "Подготовься к новому году"));
 
-        Subtask subtask = new Subtask("Документы", epic.getId(), "Проверить документы", TaskStatus.NEW);
-        Subtask subtask2 = new Subtask("Вещи", epic.getId(), "Собрать вещи", TaskStatus.NEW);
-        Subtask subtask3 = new Subtask("Елка", epic2.getId(), "Нарядить елку", TaskStatus.NEW);
+        Subtask subtask1 = inMemoryTaskManager.createSubtask(new Subtask("Документы", "Проверить документы", epic1.getId()));
+        Subtask subtask2 = inMemoryTaskManager.createSubtask(new Subtask("Вещи", "Собрать вещи", epic1.getId()));
+        Subtask subtask3 = inMemoryTaskManager.createSubtask(new Subtask("Кот", "Отдать кота", epic1.getId()));
 
-        inMemoryTaskManager.createTask(task);
-        inMemoryTaskManager.createTask(task2);
-        inMemoryTaskManager.createEpic(epic);
-        inMemoryTaskManager.createEpic(epic2);
-        inMemoryTaskManager.createSubtask(subtask);
-        inMemoryTaskManager.createSubtask(subtask2);
-        inMemoryTaskManager.createSubtask(subtask3);
+        inMemoryTaskManager.getTaskById(task1.getId());
+        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList() + System.lineSeparator());
+        inMemoryTaskManager.getTaskById(task1.getId());
+        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList() + System.lineSeparator());
 
-        System.out.println(inMemoryTaskManager.getEpics());
-        System.out.println(inMemoryTaskManager.getTasks());
-        System.out.println(inMemoryTaskManager.getSubtasks());
+        inMemoryTaskManager.getEpicById(epic1.getId());
+        inMemoryTaskManager.getSubtaskById(subtask1.getId());
+        inMemoryTaskManager.getSubtaskById(subtask2.getId());
+        inMemoryTaskManager.getSubtaskById(subtask3.getId());
+        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList()+System.lineSeparator());
 
-        System.out.println(inMemoryTaskManager.updateTask(task.getId(), new Task("Кот", "Покорми кота", TaskStatus.DONE)));
-        System.out.println(inMemoryTaskManager.updateTask(task2.getId(), new Task("Магазин", "Сходи в магазин", TaskStatus.IN_PROGRESS)));
-
-        System.out.println(inMemoryTaskManager.updateSubtask(subtask.getId(), new Subtask("Документы", epic.getId(), "Проверить документы", TaskStatus.DONE)));
-        System.out.println(inMemoryTaskManager.updateSubtask(subtask2.getId(), new Subtask("Вещи", epic.getId(), "Собрать вещи", TaskStatus.DONE)));
-        System.out.println(inMemoryTaskManager.updateSubtask(subtask3.getId(), new Subtask("Елка", epic2.getId(), "Нарядить елку", TaskStatus.IN_PROGRESS)));
-
-        System.out.println(inMemoryTaskManager.getEpics());
-
-        System.out.println(inMemoryTaskManager.getTasks());
-        System.out.println(inMemoryTaskManager.getSubtasks());
+        inMemoryTaskManager.deleteEpic(epic1.getId());
+        System.out.println(inMemoryTaskManager.getAllTasksInHistoryList()+System.lineSeparator());
     }
 }
