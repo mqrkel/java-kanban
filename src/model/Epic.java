@@ -15,10 +15,10 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "\n" + "Epic{" +
-                "name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                ", id=" + getId() +
-                '}';
+               "name='" + getName() + '\'' +
+               ", description='" + getDescription() + '\'' +
+               ", status=" + getStatus() +
+               ", id=" + getId() +
+               '}';
     }
 }

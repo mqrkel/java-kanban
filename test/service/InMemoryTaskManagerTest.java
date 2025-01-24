@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 class InMemoryTaskManagerTest {
 
@@ -37,15 +40,27 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void add15TasksToHistoryListAndShouldGet10() {
+    void addTasksToHistoryAndAddingTaskAgainShouldRewriteTaskToTheEndOfTheList() {
         String name = "Наименование ";
         String description = "Описание ";
+        List<Task> evenNumbers = new ArrayList<>();
+
         for (int i = 1; i < 16; i++) {
             Task task = new Task(name + i, description + i);
             taskManager.createTask(task);
-            taskManager.getTaskById(task.getId());
+            Task taskById = taskManager.getTaskById(task.getId());
+            if (i % 2 == 0) {
+                evenNumbers.add(taskById);
+            }
         }
-        Assertions.assertEquals(10, taskManager.getAllTasksInHistoryList().size(), "Количество задач в списке должно быть равно 10");
+        for (Task evenNumber : evenNumbers) {
+            taskManager.getTaskById(evenNumber.getId());
+        }
+        Assertions.assertEquals(15, taskManager.getAllTasksInHistoryList().size(), "Количество задач в списке должно быть равно 15");
+
+        Task task = taskManager.getTaskById(14);
+        List<Task> history = taskManager.getAllTasksInHistoryList();
+        Assertions.assertEquals(task, history.getLast(), "Задача с ID 14 должна быть в конце списка.");
     }
 
     @Test
@@ -252,5 +267,50 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(statusInHistoryBeforeUpdate, taskInHistoryAfterUpdate.getStatus(), "Статус задачи должен остаться прежним в истории");
         Assertions.assertEquals(descriptionInHistoryBeforeUpdate, taskInHistoryAfterUpdate.getDescription(), "Описание задачи должно остаться прежним");
         Assertions.assertEquals(nameInHistoryBeforeUpdate, taskInHistoryAfterUpdate.getName(), "Наименование задачи должно остаться прежним");
+    }
+
+    @Test
+    void WhenRemoveTaskFromTasksListAlsoTaskShouldBeDeletedFromHistoryList() {
+        String name = "Наименование ";
+        String description = "Описание ";
+        for (int i = 0; i < 5; i++) {
+            Epic epic = new Epic(name + i, description + i);
+            taskManager.createEpic(epic);
+            taskManager.getEpicById((epic.getId()));
+        }
+        for (int i = 0; i < 5; i++) {
+            Task task = new Task(name + i, description + i);
+            taskManager.createTask(task);
+            taskManager.getTaskById((task.getId()));
+        }
+        taskManager.deleteTasks();
+        Assertions.assertEquals(5, taskManager.getAllTasksInHistoryList().size(), "При удалении задачи, список в истории должен быть уменьшен на 5");
+    }
+
+    @Test
+    void WhenRemoveEpicFromTasksListAlsoEpicShouldBeDeletedFromHistoryList() {
+        String name = "Наименование ";
+        String description = "Описание ";
+        for (int i = 0; i < 5; i++) {
+            Epic epic = new Epic(name + i, description + i);
+            taskManager.createEpic(epic);
+            taskManager.getEpicById((epic.getId()));
+        }
+        taskManager.deleteEpic(1);
+        Assertions.assertEquals(4, taskManager.getAllTasksInHistoryList().size(), "При удалении задачи, список в истории должен быть уменьшен на 1");
+    }
+
+    @Test
+    void WhenRemoveSubtaskFromTasksListAlsoSubtaskShouldBeDeletedFromHistoryList() {
+        String name = "Наименование ";
+        String description = "Описание ";
+        Epic epic = taskManager.createEpic(new Epic(name + 1, description + 1));
+        for (int i = 0; i < 5; i++) {
+            Subtask subtask = new Subtask(name + i, description + i, epic.getId());
+            taskManager.createSubtask(subtask);
+            taskManager.getSubtaskById((subtask.getId()));
+        }
+        taskManager.deleteSubtask(2);
+        Assertions.assertEquals(4, taskManager.getAllTasksInHistoryList().size(), "При удалении задачи, список в истории должен быть уменьшен на 1");
     }
 }
