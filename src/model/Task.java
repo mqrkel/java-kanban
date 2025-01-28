@@ -30,7 +30,7 @@ public class Task {
         this.id = getId();
     }
 
-    public TaskType getTaskType(){
+    public TaskType getTaskType() {
         return TaskType.TASK;
     }
 
