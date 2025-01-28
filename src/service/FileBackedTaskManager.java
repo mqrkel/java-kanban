@@ -13,7 +13,7 @@ import java.util.List;
 
 import static service.Managers.getDefaultHistory;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
 
     public static void main(String[] args) {
@@ -34,7 +34,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         System.out.println(loadedManager.getSubtasks());
         loadedManager.deleteTasks();
     }
-
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
@@ -106,11 +105,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             for (int i = 1; i < lines.size(); i++) {
                 String line = lines.get(i);
                 Task task = parseFromString(line);
-                if (task instanceof Subtask) {
-                    manager.createSubtask((Subtask) task);
-                } else if (task instanceof Epic) {
+                if (TaskType.TASK.equals(task.getTaskType())) {
+                    manager.createTask(task);
+                } else if (TaskType.EPIC.equals(task.getTaskType())) {
                     manager.createEpic((Epic) task);
-                } else manager.createTask(task);
+                } else manager.createSubtask((Subtask) task);
             }
         } catch (IOException e) {
             throw new ManagerReadFileException("Не удалось найти файл по указанному пути");

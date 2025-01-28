@@ -18,4 +18,9 @@ public class Epic extends Task {
         return "%d,%s,%s,%s,%s".formatted(this.getId(), TaskType.EPIC, this.getName(),
                 this.getStatus(), this.getDescription());
     }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
+    }
 }

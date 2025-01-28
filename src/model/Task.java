@@ -30,6 +30,10 @@ public class Task {
         this.id = getId();
     }
 
+    public TaskType getTaskType(){
+        return TaskType.TASK;
+    }
+
 
     @Override
     public String toString() {
@@ -40,6 +44,7 @@ public class Task {
     public String getName() {
         return name;
     }
+
 
     public String getDescription() {
         return description;
