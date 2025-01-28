@@ -33,14 +33,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return "\n" + "Task{" +
-               "name='" + name + '\'' +
-               ", description='" + description + '\'' +
-               ", status=" + status +
-               ", id=" + id +
-               '}';
+        return "%d,%s,%s,%s,%s".formatted(this.id, TaskType.TASK, this.name,
+                this.status, this.description);
     }
-
 
     public String getName() {
         return name;
