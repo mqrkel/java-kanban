@@ -48,5 +48,4 @@ public interface TaskManager {
     Subtask deleteSubtask(int subtaskId);
 
     void epicCheckStatus(int epicId);
-
 }

@@ -30,21 +30,21 @@ public class Task {
         this.id = getId();
     }
 
+    public TaskType getTaskType() {
+        return TaskType.TASK;
+    }
+
 
     @Override
     public String toString() {
-        return "\n" + "Task{" +
-               "name='" + name + '\'' +
-               ", description='" + description + '\'' +
-               ", status=" + status +
-               ", id=" + id +
-               '}';
+        return "%d,%s,%s,%s,%s".formatted(this.id, TaskType.TASK, this.name,
+                this.status, this.description);
     }
-
 
     public String getName() {
         return name;
     }
+
 
     public String getDescription() {
         return description;
