@@ -1,6 +1,8 @@
 package model;
 
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,6 +10,21 @@ public class Task {
     private final String description;
     private TaskStatus status;
     private int id;
+    private Duration duration;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -30,6 +47,36 @@ public class Task {
         this.id = getId();
     }
 
+    public Task(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.id = getId();
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
+    }
+
+    public Task(Integer id, String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
+    }
+
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.status = TaskStatus.NEW;
+        this.id = getId();
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
+    }
+
     public TaskType getTaskType() {
         return TaskType.TASK;
     }
@@ -37,14 +84,30 @@ public class Task {
 
     @Override
     public String toString() {
-        return "%d,%s,%s,%s,%s".formatted(this.id, TaskType.TASK, this.name,
-                this.status, this.description);
+        return "%d,%s,%s,%s,%s,%s,%s".formatted(this.id,
+                TaskType.TASK,
+                this.name,
+                this.status,
+                this.description,
+                this.duration,
+                this.startTime);
     }
 
     public String getName() {
         return name;
     }
 
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 
     public String getDescription() {
         return description;
