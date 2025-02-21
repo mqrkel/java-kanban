@@ -3,18 +3,23 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Epic extends Task {
-    List<Integer> subtaskIds = new ArrayList<>();
+    Set<Integer> subtaskIds = new HashSet<>();
 
     public Epic(String name, String description) {
-        super(name, description, Duration.ZERO, LocalDateTime.now());
+        super(name, description, Duration.ZERO, null);
     }
 
     public Epic(Integer id, String name, String description, TaskStatus status) {
-        super(id, name, description, status, Duration.ZERO, LocalDateTime.now());
+        super(id, name, description, status, Duration.ZERO, null);
+    }
+
+    public Epic(Integer idTask, String nameTask, String descriptionTask, TaskStatus statusTask, Duration duration, LocalDateTime startTime) {
+        super(idTask, nameTask, descriptionTask, statusTask, duration, startTime);
     }
 
     @Override

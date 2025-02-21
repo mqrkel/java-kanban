@@ -1,7 +1,7 @@
 package exceptions;
 
-public class InvalidTaskTimeException extends Exception {
-    public InvalidTaskTimeException(String s) {
-        System.out.println(s);
+public class InvalidTaskTimeException extends RuntimeException {
+    public InvalidTaskTimeException(String message) {
+        super(message);
     }
 }

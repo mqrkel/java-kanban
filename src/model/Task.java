@@ -52,9 +52,7 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = getId();
-        this.duration = duration;
-        this.startTime = startTime;
-        this.endTime = startTime.plus(duration);
+        prefillTime(duration, startTime);
     }
 
     public Task(Integer id, String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
@@ -62,9 +60,15 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+        prefillTime(duration, startTime);
+    }
+
+    private void prefillTime(Duration duration, LocalDateTime startTime) {
         this.duration = duration;
         this.startTime = startTime;
-        this.endTime = startTime.plus(duration);
+        if (startTime != null) {
+            this.endTime = startTime.plus(duration);
+        } else endTime = null;
     }
 
     public Task(String name, String description, Duration duration, LocalDateTime startTime) {
@@ -72,9 +76,7 @@ public class Task {
         this.description = description;
         this.status = TaskStatus.NEW;
         this.id = getId();
-        this.duration = duration;
-        this.startTime = startTime;
-        this.endTime = startTime.plus(duration);
+        prefillTime(duration, startTime);
     }
 
     public TaskType getTaskType() {
@@ -84,13 +86,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "%d,%s,%s,%s,%s,%s,%s".formatted(this.id,
-                TaskType.TASK,
-                this.name,
-                this.status,
-                this.description,
-                this.duration,
-                this.startTime);
+        return "%d,%s,%s,%s,%s,%s,%s".formatted(this.id, TaskType.TASK, this.name, this.status, this.description, this.duration, this.startTime);
     }
 
     public String getName() {
