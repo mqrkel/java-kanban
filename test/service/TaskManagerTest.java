@@ -156,8 +156,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task createdTaskByFilledId = taskManager.createTask(new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus()));
 
         assertEquals(7, taskManager.getTasks().size(), "Количество задач в списке должно быть равным 7");
-        assertNotEquals(createdTask.getId(), createdTaskByFilledId.getId(), "Задачи с заданным id и сгенерированным id" +
-                                                                            " не должны конфликтовать внутри менеджера");
+        assertNotEquals(createdTask.getId(), createdTaskByFilledId.getId(), "Задачи с заданным id и сгенерированным id" + " не должны конфликтовать внутри менеджера");
     }
 
 
@@ -234,8 +233,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         Optional<Epic> updatedEpic = taskManager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent(), "Эпик с ID=" + epic.getId() + " не найден");
-        assertEquals(TaskStatus.DONE, updatedEpic.get().getStatus(),
-                "Эпик должен иметь статус 'DONE', т.к. все его подзадачи завершены");
+        assertEquals(TaskStatus.DONE, updatedEpic.get().getStatus(), "Эпик должен иметь статус 'DONE', т.к. все его подзадачи завершены");
     }
 
     @Test
@@ -246,8 +244,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         }
         Optional<Epic> updatedEpic = taskManager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent(), "Эпик с ID=" + epic.getId() + " не найден");
-        assertEquals(TaskStatus.NEW, updatedEpic.get().getStatus(),
-                "Эпик должен иметь статус 'NEW', т.к. все его подзадачи 'NEW'");
+        assertEquals(TaskStatus.NEW, updatedEpic.get().getStatus(), "Эпик должен иметь статус 'NEW', т.к. все его подзадачи 'NEW'");
     }
 
     @Test
@@ -261,8 +258,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         }
         Optional<Epic> updatedEpic = taskManager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent(), "Эпик с ID=" + epic.getId() + " не найден");
-        assertEquals(TaskStatus.IN_PROGRESS, updatedEpic.get().getStatus(),
-                "Эпик должен иметь статус 'IN_PROGRESS', так как его подзадачи имеют разные статусы");
+        assertEquals(TaskStatus.IN_PROGRESS, updatedEpic.get().getStatus(), "Эпик должен иметь статус 'IN_PROGRESS', так как его подзадачи имеют разные статусы");
     }
 
     @Test
@@ -337,12 +333,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddTasksToPrioritizedTasksInCorrectOrder() {
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW,
-                Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 10, 0));
-        Task task2 = new Task("Task 2", "Description 2", TaskStatus.NEW,
-                Duration.ofMinutes(45), LocalDateTime.of(2025, 2, 20, 9, 0));
-        Task task3 = new Task("Task 3", "Description 3", TaskStatus.NEW,
-                Duration.ofMinutes(15), LocalDateTime.of(2025, 2, 20, 11, 0));
+        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 10, 0));
+        Task task2 = new Task("Task 2", "Description 2", TaskStatus.NEW, Duration.ofMinutes(45), LocalDateTime.of(2025, 2, 20, 9, 0));
+        Task task3 = new Task("Task 3", "Description 3", TaskStatus.NEW, Duration.ofMinutes(15), LocalDateTime.of(2025, 2, 20, 11, 0));
 
         Task createdTask1 = taskManager.createTask(task1);
         Task createdTask2 = taskManager.createTask(task2);
@@ -358,11 +351,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldRemoveTasksFromPrioritizedTasks() {
-        Task task = taskManager.createTask(new Task("Task to Remove", "Desc", TaskStatus.NEW,
-                Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 10, 0)));
+        Task task = taskManager.createTask(new Task("Task to Remove", "Desc", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 10, 0)));
         Epic epic = taskManager.createEpic(new Epic("Epic to Remove", "Desc"));
-        Subtask subtask = taskManager.createSubtask(new Subtask("Subtask to Remove", "Desc", epic.getId(),
-                Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 11, 0)));
+        Subtask subtask = taskManager.createSubtask(new Subtask("Subtask to Remove", "Desc", epic.getId(), Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 11, 0)));
 
         assertEquals(2, taskManager.getPrioritizedTasks().size());
         taskManager.deleteTask(task.getId());
@@ -373,11 +364,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldUpdateTaskInPrioritizedTasks() {
-        Task task = taskManager.createTask(new Task("Task", "Desc", Duration.ofMinutes(30),
-                LocalDateTime.of(2025, 2, 20, 10, 0)));
+        Task task = taskManager.createTask(new Task("Task", "Desc", Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 10, 0)));
 
-        Task updatedTask = new Task("Task", "Updated Desc", TaskStatus.IN_PROGRESS,
-                Duration.ofMinutes(45), LocalDateTime.of(2025, 2, 20, 12, 0));
+        Task updatedTask = new Task("Task", "Updated Desc", TaskStatus.IN_PROGRESS, Duration.ofMinutes(45), LocalDateTime.of(2025, 2, 20, 12, 0));
 
         taskManager.updateTask(task.getId(), updatedTask);
 
@@ -389,13 +378,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAllowAddingTaskAfterRemovingOverlappingOne() {
-        Task task1 = taskManager.createTask(new Task("Task 1", "Desc",
-                Duration.ofMinutes(60), LocalDateTime.of(2025, 2, 20, 9, 0)));
+        Task task1 = taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(60), LocalDateTime.of(2025, 2, 20, 9, 0)));
 
         taskManager.deleteTask(task1.getId());
 
-        taskManager.createTask(new Task("Task 2", "Desc", TaskStatus.NEW,
-                Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 9, 0)));
+        taskManager.createTask(new Task("Task 2", "Desc", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 9, 0)));
 
         assertEquals(1, taskManager.getPrioritizedTasks().size());
         assertEquals("Task 2", taskManager.getPrioritizedTasks().getFirst().getName());
@@ -404,13 +391,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldAllowAddingSubtaskAfterRemovingOverlappingOne() {
         Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
-        Subtask subtask = taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(),
-                Duration.ofMinutes(60), LocalDateTime.of(2025, 2, 20, 9, 0)));
+        Subtask subtask = taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(), Duration.ofMinutes(60), LocalDateTime.of(2025, 2, 20, 9, 0)));
 
         taskManager.deleteSubtask(subtask.getId());
 
-        taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId(),
-                Duration.ofMinutes(60), LocalDateTime.of(2025, 2, 20, 9, 0)));
+        taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId(), Duration.ofMinutes(60), LocalDateTime.of(2025, 2, 20, 9, 0)));
 
         assertEquals(1, taskManager.getPrioritizedTasks().size());
         assertEquals("Subtask 2", taskManager.getPrioritizedTasks().getFirst().getName());
@@ -418,34 +403,27 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAllowTaskStartingExactlyAfterAnother() {
-        taskManager.createTask(new Task("Task 1", "Desc",
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30)));
+        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30)));
 
-        Task task = new Task("Task 2", "Desc",
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 25));
+        Task task = new Task("Task 2", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 25));
 
         assertDoesNotThrow(() -> taskManager.createTask(task));
     }
 
     @Test
     void shouldThrowExceptionWhenTasksOverlap() {
-        Task task = new Task("Task 1", "Desc",
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30));
+        Task task = new Task("Task 1", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30));
         taskManager.createTask(task);
 
-        Task task2 = new Task("Task 2", "Desc",
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 27));
-        Task task3 = new Task("Task 2", "Desc",
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 33));
-        Task task4 = new Task("Task 2", "Desc",
-                Duration.ofMinutes(11), LocalDateTime.of(2025, 2, 20, 12, 25));
-        Task task5 = new Task("Task 2", "Desc",
-                Duration.ofMinutes(3), LocalDateTime.of(2025, 2, 20, 12, 31));
+        Task task2 = new Task("Task 2", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 27));
+        Task task3 = new Task("Task 2", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 33));
+        Task task4 = new Task("Task 2", "Desc", Duration.ofMinutes(11), LocalDateTime.of(2025, 2, 20, 12, 25));
+        Task task5 = new Task("Task 2", "Desc", Duration.ofMinutes(3), LocalDateTime.of(2025, 2, 20, 12, 31));
 
-        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task2), "das");
-        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task3), "das");
-        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task4), "das");
-        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task5), "das");
+        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task2), "Задача пересекается с существующей");
+        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task3), "Задача пересекается с существующей");
+        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task4), "Задача пересекается с существующей");
+        assertThrows(InvalidTaskTimeException.class, () -> taskManager.createTask(task5), "Задача пересекается с существующей");
     }
 
     @Test
@@ -461,38 +439,62 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldClearPrioritizedTasksAfterDeletingAll() {
         Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
-        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5),
-                LocalDateTime.of(2025, 2, 20, 12, 30)));
-        taskManager.createTask(new Task("Task 2", "Desc", Duration.ofMinutes(5),
-                LocalDateTime.of(2025, 2, 20, 12, 35)));
-        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(),
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 40)));
+        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30)));
+        taskManager.createTask(new Task("Task 2", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 35)));
+        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(), Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 40)));
         taskManager.deleteTasks();
         taskManager.deleteSubtasks();
         assertEquals(0, taskManager.getPrioritizedTasks().size());
     }
+
     @Test
     void shouldClearPrioritizedTasksAfterDeletingAllEpics() {
         Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
-        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5),
-                LocalDateTime.of(2025, 2, 20, 12, 30)));
-        taskManager.createTask(new Task("Task 2", "Desc", Duration.ofMinutes(5),
-                LocalDateTime.of(2025, 2, 20, 12, 35)));
-        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(),
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 40)));
+        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30)));
+        taskManager.createTask(new Task("Task 2", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 35)));
+        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(), Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 40)));
         taskManager.deleteEpics();
         assertEquals(2, taskManager.getPrioritizedTasks().size());
     }
+
     @Test
     void shouldClearPrioritizedTasksAfterDeletingOneEpic() {
         Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
-        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5),
-                LocalDateTime.of(2025, 2, 20, 12, 30)));
-        taskManager.createTask(new Task("Task 2", "Desc", Duration.ofMinutes(5),
-                LocalDateTime.of(2025, 2, 20, 12, 35)));
-        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(),
-                Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 40)));
+        taskManager.createTask(new Task("Task 1", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30)));
+        taskManager.createTask(new Task("Task 2", "Desc", Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 35)));
+        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId(), Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 40)));
         taskManager.deleteEpic(epic.getId());
         assertEquals(2, taskManager.getPrioritizedTasks().size());
     }
+
+    @Test
+    void shouldUpdateEpicTimeWhenAddingSubtasks() {
+        Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
+        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId()));
+        Subtask subtask1 = taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId(), Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 12, 30)));
+        Subtask subtask2 = taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId(), Duration.ofMinutes(5), LocalDateTime.of(2025, 2, 20, 13, 30)));
+        Optional<Epic> updateEpicOptional = taskManager.getEpicById(epic.getId());
+        assertTrue(updateEpicOptional.isPresent());
+        Epic updateEpic = updateEpicOptional.get();
+
+        assertEquals(updateEpic.getStartTime(), subtask1.getStartTime());
+        assertEquals(updateEpic.getDuration(), subtask1.getDuration().plus(subtask2.getDuration()));
+        assertEquals(updateEpic.getEndTime(), subtask2.getEndTime());
+    }
+
+    @Test
+    void test() {
+        Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
+        taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId()));
+        taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId()));
+        taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId()));
+        Optional<Epic> updateEpicOptional = taskManager.getEpicById(epic.getId());
+        assertTrue(updateEpicOptional.isPresent());
+        Epic updateEpic = updateEpicOptional.get();
+
+        assertNull(updateEpic.getStartTime());
+        assertEquals(Duration.ZERO, updateEpic.getDuration());
+        assertNull(updateEpic.getEndTime());
+    }
+
 }

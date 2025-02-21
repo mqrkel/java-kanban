@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Epic extends Task {
-    Set<Integer> subtaskIds = new HashSet<>();
+    private final Set<Integer> subtaskIds = new HashSet<>();
 
     public Epic(String name, String description) {
         super(name, description, Duration.ZERO, null);

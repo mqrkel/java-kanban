@@ -110,9 +110,9 @@ public class InMemoryTaskManager implements TaskManager {
         Subtask createdSubtask = new Subtask(id, subtask.getName(), subtask.getDescription(), subtask.getStatus(), epicId, subtask.getDuration(), subtask.getStartTime());
         Epic epic = epics.get(epicId);
         epic.addSubtaskId(id);
-        updateEpicTime(epic);
         subtask.setId(id);
         subtasks.put(createdSubtask.getId(), createdSubtask);
+        updateEpicTime(epic);
         epicCheckStatus(epicId);
         if (createdSubtask.getStartTime() != null) {
             prioritizedTasks.add(createdSubtask);
@@ -185,14 +185,10 @@ public class InMemoryTaskManager implements TaskManager {
         oldSubtask.ifPresent(prioritizedTasks::remove);
         modifiedSubtask.setId(subtaskId);
         subtasks.put(subtaskId, modifiedSubtask);
-        for (Map.Entry<Integer, Epic> epicEntry : epics.entrySet()) {
-            if (epicEntry.getValue().getId() == modifiedSubtask.getEpicId()) {
-                Epic epic = epicEntry.getValue();
-                epicCheckStatus(epic.getId());
-                updateEpicTime(epic);
-                prioritizedTasks.add(modifiedSubtask);
-            }
-        }
+        Epic epic = epics.get(modifiedSubtask.getEpicId());
+        epicCheckStatus(epic.getId());
+        updateEpicTime(epic);
+        prioritizedTasks.add(modifiedSubtask);
         return modifiedSubtask;
     }
 
@@ -295,23 +291,32 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void updateEpicTime(Epic epic) {
-        LocalDateTime startTime = getMinimalDateTime(epic);
-        long duration = calculateEpicDuration(epic.getSubtaskIdsByEpic());
-        epic.setStartTime(startTime);
-        epic.setDuration(Duration.ofMinutes(duration));
-        epic.setEndTime((startTime != null) ? startTime.plus(Duration.ofMinutes(duration)) : null);
-    }
-
-    private long calculateEpicDuration(List<Integer> subtaskIdsByEpic) {
-        return subtaskIdsByEpic.stream().map(subtasks::get).filter(Objects::nonNull).map(subtask -> Optional.ofNullable(subtask.getDuration()).orElse(Duration.ZERO).toMinutes()).reduce(0L, Long::sum);
-    }
-
-    private LocalDateTime getMinimalDateTime(Epic epic) {
-        if (epic == null || epic.getSubtaskIdsByEpic() == null) {
-            return null;
+        List<Integer> subs = epic.getSubtaskIdsByEpic();
+        if (subs.isEmpty()) {
+            return;
         }
-
-        return epic.getSubtaskIdsByEpic().stream().map(subtasks::get).filter(Objects::nonNull).map(Task::getStartTime).filter(Objects::nonNull).min(Comparator.naturalOrder()).orElse(null);
+        LocalDateTime minStartTime = LocalDateTime.MAX;
+        LocalDateTime maxEndTime = LocalDateTime.MIN;
+        long duration = 0L;
+        for (Integer id : subs) {
+            Subtask subtask = subtasks.get(id);
+            if (subtask.getStartTime() == null) {
+                continue;
+            }
+            LocalDateTime startTime = subtask.getStartTime();
+            LocalDateTime endTime = subtask.getEndTime();
+            if (startTime.isBefore(minStartTime))
+                minStartTime = startTime;
+            if (endTime.isAfter(maxEndTime)) {
+                maxEndTime = endTime;
+            }
+            duration += subtask.getDuration().toMinutes();
+        }
+        if (minStartTime == LocalDateTime.MAX) minStartTime = null;
+        if (maxEndTime == LocalDateTime.MIN) maxEndTime = null;
+        epic.setStartTime(minStartTime);
+        epic.setEndTime(maxEndTime);
+        epic.setDuration(Duration.ofMinutes(duration));
     }
 
     private void validateTask(Task task) {
