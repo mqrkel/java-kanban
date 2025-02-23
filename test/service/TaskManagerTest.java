@@ -483,7 +483,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void test() {
+    void shouldNotSetTimeForEpicWithoutTimedSubtasks() {
         Epic epic = taskManager.createEpic(new Epic("Epic 1", "Desc"));
         taskManager.createSubtask(new Subtask("Subtask 1", "Desc", epic.getId()));
         taskManager.createSubtask(new Subtask("Subtask 2", "Desc", epic.getId()));
