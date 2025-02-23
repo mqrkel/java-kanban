@@ -496,5 +496,4 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(Duration.ZERO, updateEpic.getDuration());
         assertNull(updateEpic.getEndTime());
     }
-
 }
