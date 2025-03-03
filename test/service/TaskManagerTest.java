@@ -366,7 +366,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void shouldUpdateTaskInPrioritizedTasks() {
         Task task = taskManager.createTask(new Task("Task", "Desc", Duration.ofMinutes(30), LocalDateTime.of(2025, 2, 20, 10, 0)));
 
-        Task updatedTask = new Task("Task", "Updated Desc", TaskStatus.IN_PROGRESS, Duration.ofMinutes(45), LocalDateTime.of(2025, 2, 20, 12, 0));
+        Task updatedTask = new Task(task.getId(), "Task", "Updated Desc", TaskStatus.IN_PROGRESS, Duration.ofMinutes(45), LocalDateTime.of(2025, 2, 20, 12, 0));
 
         taskManager.updateTask(task.getId(), updatedTask);
 
