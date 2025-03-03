@@ -19,6 +19,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
             os.write(response);
         }
     }
+
     public void handle(HttpExchange exchange) throws IOException {
         try {
             handleRequest(exchange);
@@ -47,8 +48,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
     }
 
     private static String getFormatted(String message) {
-        return """
-                {"error": "%s"}
-                """.formatted(message);
+        return "{\"error\": \"%s\"}".formatted(message);
     }
 }
