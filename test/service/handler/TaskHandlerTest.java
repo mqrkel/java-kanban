@@ -1,9 +1,12 @@
 package service.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import exceptions.NotFoundException;
 import http.HttpTaskServer;
+import http.handler.adapter.DurationAdapter;
+import http.handler.adapter.LocalDateTimeAdapter;
 import model.Task;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +39,10 @@ class TaskHandlerTest {
         manager = Managers.getDefault();
         server = new HttpTaskServer(manager);
         client = HttpClient.newHttpClient();
-        gson = server.getGson();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         server.start();
     }
 

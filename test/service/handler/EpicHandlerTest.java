@@ -1,8 +1,11 @@
 package service.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import http.HttpTaskServer;
+import http.handler.adapter.DurationAdapter;
+import http.handler.adapter.LocalDateTimeAdapter;
 import model.Epic;
 import model.Subtask;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +19,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +39,10 @@ class EpicHandlerTest {
         manager = Managers.getDefault();
         server = new HttpTaskServer(manager);
         client = HttpClient.newHttpClient();
-        gson = server.getGson();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         server.start();
     }
 
