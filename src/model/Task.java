@@ -9,7 +9,7 @@ public class Task {
     private final String name;
     private final String description;
     private TaskStatus status;
-    private int id;
+    private Integer id;
     private Duration duration;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -30,7 +30,6 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
-        this.id = getId();
     }
 
     public Task(Integer id, String name, String description, TaskStatus status) {
@@ -44,14 +43,19 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
-        this.id = getId();
+    }
+
+    public Task(Integer id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = TaskStatus.NEW;
     }
 
     public Task(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
-        this.id = getId();
         prefillTime(duration, startTime);
     }
 
@@ -75,7 +79,14 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
-        this.id = getId();
+        prefillTime(duration, startTime);
+    }
+
+    public Task(Integer id, String name, String description, Duration duration, LocalDateTime startTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = TaskStatus.NEW;
         prefillTime(duration, startTime);
     }
 
@@ -117,8 +128,8 @@ public class Task {
         this.status = status;
     }
 
-    public int getId() {
-        return id;
+    public Integer getId() {
+        return id != null ? id : -1;
     }
 
     public void setId(int generatorId) {
@@ -130,7 +141,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id;
+        return id.equals(task.id);
     }
 
     @Override

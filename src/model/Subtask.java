@@ -32,6 +32,11 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(Integer id, String name, String description, Integer epicId, Duration duration, LocalDateTime startTime) {
+        super(id, name, description, duration, startTime);
+        this.epicId = epicId;
+    }
+
     @Override
     public TaskType getTaskType() {
         return TaskType.SUBTASK;
@@ -47,5 +52,4 @@ public class Subtask extends Task {
                 this.getStatus(), this.getDescription(), this.getEpicId(), this.getDuration(), this.getStartTime()
         );
     }
-
 }

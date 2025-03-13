@@ -15,7 +15,9 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    private final Set<Task> prioritizedTasks = new TreeSet<>(
+            Comparator.comparing(Task::getStartTime, Comparator.nullsLast(Comparator.naturalOrder()))
+    );
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
@@ -81,9 +83,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task createTask(Task task) {
-        validateTask(task);
         int id = ++generatorId;
         Task createdTask = new Task(id, task.getName(), task.getDescription(), task.getStatus(), task.getDuration(), task.getStartTime());
+        if (!validateTask(createdTask)) {
+            throw new InvalidTaskTimeException("Задача с id=" + createdTask.getId() + " пересекается с другими задачами.");
+        }
         task.setId(id);
         tasks.put(createdTask.getId(), createdTask);
         if (createdTask.getStartTime() != null) {
@@ -104,10 +108,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
-        validateTask(subtask);
         int id = ++generatorId;
         int epicId = subtask.getEpicId();
         Subtask createdSubtask = new Subtask(id, subtask.getName(), subtask.getDescription(), subtask.getStatus(), epicId, subtask.getDuration(), subtask.getStartTime());
+        if (!validateTask(createdSubtask)) {
+            throw new InvalidTaskTimeException("Задача с id=" + createdSubtask.getId() + " пересекается с другими задачами.");
+        }
         Epic epic = epics.get(epicId);
         epic.addSubtaskId(id);
         subtask.setId(id);
@@ -162,7 +168,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(int taskId, Task modifiedTask) {
-        validateTask(modifiedTask);
+        if (!validateTask(modifiedTask)) {
+            throw new InvalidTaskTimeException("Задача с id=" + modifiedTask.getId() + " пересекается с другими задачами.");
+        }
         Optional<Task> oldTask = getTaskById(taskId);
         oldTask.ifPresent(prioritizedTasks::remove);
         modifiedTask.setId(taskId);
@@ -180,7 +188,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask updateSubtask(int subtaskId, Subtask modifiedSubtask) {
-        validateTask(modifiedSubtask);
+        if (!validateTask(modifiedSubtask)) {
+            throw new InvalidTaskTimeException("Задача с id=" + modifiedSubtask.getId() + " пересекается с другими задачами.");
+        }
         Optional<Subtask> oldSubtask = getSubtaskById(subtaskId);
         oldSubtask.ifPresent(prioritizedTasks::remove);
         modifiedSubtask.setId(subtaskId);
@@ -319,30 +329,22 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setDuration(Duration.ofMinutes(duration));
     }
 
-    private void validateTask(Task task) {
+    public boolean validateTask(Task task) {
         if (task.getStartTime() == null || task.getEndTime() == null) {
-            return;
+            return true;
         }
-        List<Integer> conflictingIds = findConflictingTasks(task);
-        if (!conflictingIds.isEmpty()) {
-            throw new InvalidTaskTimeException("Задача с id=" + task.getId() + " пересекается с задачами id=" + conflictingIds);
-        }
-    }
-
-    private List<Integer> findConflictingTasks(Task task) {
-        List<Integer> conflictingIds = new ArrayList<>();
-        LocalDateTime taskStart = task.getStartTime();
-        LocalDateTime taskEnd = task.getEndTime();
-        for (Task t : prioritizedTasks) {
-            if (t.getId() == task.getId() || t.getStartTime() == null || t.getEndTime() == null) {
+        for (Task existingTask : prioritizedTasks) {
+            if (Objects.equals(existingTask.getId(), task.getId()) || existingTask.getStartTime() == null || existingTask.getEndTime() == null) {
                 continue;
             }
-            LocalDateTime otherStart = t.getStartTime();
-            LocalDateTime otherEnd = t.getEndTime();
-            if (taskStart.isBefore(otherEnd) && taskEnd.isAfter(otherStart)) {
-                conflictingIds.add(t.getId());
+            if (isTimeConflict(task, existingTask)) {
+                return false;
             }
         }
-        return conflictingIds;
+        return true;
+    }
+
+    private boolean isTimeConflict(Task task1, Task task2) {
+        return task1.getStartTime().isBefore(task2.getEndTime()) && task1.getEndTime().isAfter(task2.getStartTime());
     }
 }
